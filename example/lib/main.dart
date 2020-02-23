@@ -4,10 +4,7 @@ import 'package:flutter_native_html_view/flutter_native_html_view.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  String _htmlString =
-      '<html><body>hello<details>\n<summary>\nSome explanation</summary>\n<p>'
-      'This text will be hidden</p>\n</details><br/><a href="https://www.mta.tv"'
-      '>www.mta.tv</a></body></html>';
+  String _htmlString = 'some html data here';
 
   @override
   Widget build(BuildContext context) {
