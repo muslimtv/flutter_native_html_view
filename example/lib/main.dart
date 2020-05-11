@@ -4,7 +4,7 @@ import 'package:flutter_native_html_view/flutter_native_html_view.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  String _htmlString = 'some html data here';
+  final String _htmlString = 'some html data here';
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
         ),
         body: FlutterNativeHtmlView(
           htmlData: _htmlString,
+          shouldShowScroll: false,
           onLinkTap: (String url) {
             print(url);
           },
