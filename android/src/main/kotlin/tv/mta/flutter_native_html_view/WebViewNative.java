@@ -34,15 +34,21 @@ public class WebViewNative implements PlatformView, EventChannel.StreamHandler,
             JSONObject args = (JSONObject) arguments;
 
             String htmlData = args.getString("data");
+            boolean shouldShowScroll = args.getBoolean("shouldShowScroll");
 
             webView = new WebView(context);
+
+            if (!shouldShowScroll) {
+                webView.setVerticalScrollBarEnabled(false);
+                webView.setHorizontalScrollBarEnabled(false);
+            }
 
             webView.getSettings().setJavaScriptEnabled(true);
 
             webView.setWebViewClient(new WebViewClient() {
 
                 @Override
-                public boolean shouldOverrideUrlLoading(WebView  view, String  url) {
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
                     /* always handle link tap events in dart */
                     if (url.startsWith("http")) {
@@ -57,7 +63,7 @@ public class WebViewNative implements PlatformView, EventChannel.StreamHandler,
                 }
 
                 @Override
-                public void onLoadResource(WebView  view, String  url) {
+                public void onLoadResource(WebView view, String url) {
                     super.onLoadResource(view, url);
                 }
             });

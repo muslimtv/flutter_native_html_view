@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 class FlutterNativeHtmlView extends StatefulWidget {
   final String htmlData;
+  final bool shouldShowScroll;
   final Function onViewCreated;
   final Function onLinkTap;
   final Function onError;
@@ -14,6 +15,7 @@ class FlutterNativeHtmlView extends StatefulWidget {
       @required this.htmlData,
       this.onViewCreated,
       this.onLinkTap,
+      this.shouldShowScroll = true,
       this.onError})
       : super(key: key);
 
@@ -33,7 +35,7 @@ class _FlutterNativeHtmlViewState extends State<FlutterNativeHtmlView> {
   @override
   void didUpdateWidget(FlutterNativeHtmlView oldWidget) {
     if (oldWidget.htmlData != widget.htmlData) {
-      _onDataChanged(widget.htmlData);
+      _onDataChanged(widget.htmlData, widget.shouldShowScroll);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -46,6 +48,7 @@ class _FlutterNativeHtmlViewState extends State<FlutterNativeHtmlView> {
         viewType: 'tv.mta/NativeHTMLView',
         creationParams: {
           "data": _constructHTMLData(widget.htmlData),
+          "shouldShowScroll": widget.shouldShowScroll,
         },
         creationParamsCodec: const JSONMessageCodec(),
         onPlatformViewCreated: (viewId) {
@@ -63,6 +66,7 @@ class _FlutterNativeHtmlViewState extends State<FlutterNativeHtmlView> {
         viewType: 'tv.mta/NativeHTMLView',
         creationParams: {
           "data": _constructHTMLData(widget.htmlData),
+          "shouldShowScroll": widget.shouldShowScroll,
         },
         creationParamsCodec: const JSONMessageCodec(),
         onPlatformViewCreated: (viewId) {
@@ -83,9 +87,14 @@ class _FlutterNativeHtmlViewState extends State<FlutterNativeHtmlView> {
     _listenForNativeEvents(viewId);
   }
 
-  void _onDataChanged(String data) {
-    _methodChannel
-        ?.invokeMethod("onDataChanged", {"data": _constructHTMLData(data)});
+  void _onDataChanged(String data, bool shouldShowScroll) {
+    _methodChannel?.invokeMethod(
+      "onDataChanged",
+      {
+        "data": _constructHTMLData(data),
+        "shouldShowScroll": shouldShowScroll,
+      },
+    );
   }
 
   void _listenForNativeEvents(int viewId) {

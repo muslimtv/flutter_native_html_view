@@ -22,7 +22,7 @@ class NativeHTMLFactory: NSObject, FlutterPlatformViewFactory {
         let plugin = NativeHTMLFactory(messenger: registrar.messenger())
         
         plugin.registrar = registrar
-            
+        
         registrar.register(plugin, withId: "tv.mta/NativeHTMLView")
     }
     
@@ -63,6 +63,7 @@ class NativeHTMLView: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlat
     
     private var nativeWebView:WKWebView?
     private var htmlData:String
+    private var shouldShowScroll : Bool
     
     deinit {
         print("[dealloc] tv.mta/NativeVideoPlayer")
@@ -76,9 +77,10 @@ class NativeHTMLView: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlat
         
         /* data as JSON */
         let parsedData = args as! [String: Any]
-
+        
         /* set incoming html data */
         self.htmlData = parsedData["data"] as! String
+        self.shouldShowScroll = parsedData["shouldShowScroll"] as! Bool
         
         super.init()
         
@@ -108,14 +110,14 @@ class NativeHTMLView: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlat
                 
                 /* data as JSON */
                 let parsedData = call.arguments as! [String: Any]
-
+                
                 /* set incoming html data properties */
                 let data = parsedData["data"] as! String
                 
                 self.onDataChanged(data: data)
             }
                 
-            /* not implemented yet */
+                /* not implemented yet */
             else { result(FlutterMethodNotImplemented) }
         })
     }
@@ -124,6 +126,11 @@ class NativeHTMLView: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlat
     func view() -> UIView {
         
         self.nativeWebView = WKWebView()
+        
+        if(!self.shouldShowScroll) {
+            nativeWebView!.scrollView.showsHorizontalScrollIndicator = false
+            nativeWebView!.scrollView.showsVerticalScrollIndicator = false
+        }
         
         nativeWebView!.backgroundColor = UIColor.clear
         
